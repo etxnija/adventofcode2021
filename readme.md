@@ -14,26 +14,8 @@ func string doAwesome(input []int) (Error, String){
 
 @startuml
 
-class Diet {
-    - macros
-    - translations
-}
-
-class Plan {
-    - tags
-    - isNew
-    - isPreimum
-    - goal
-    - UX layout
-}
-
-class MealPlan
-
-
-
-Diet --o Plan
-
-MealPlan o-- Plan
+A -> B
+B -> C
 
 @enduml
 
