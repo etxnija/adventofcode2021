@@ -10,7 +10,6 @@ func string doAwesome(input []int) (Error, String){
 }
 ```
 
-```puml
 
 @startuml
 
@@ -19,4 +18,3 @@ B -> C
 
 @enduml
 
-```
