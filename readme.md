@@ -9,12 +9,3 @@ func string doAwesome(input []int) (Error, String){
 
 }
 ```
-
-
-@startuml
-
-A -> B
-B -> C
-
-@enduml
-
