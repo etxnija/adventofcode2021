@@ -11,6 +11,7 @@ func string doAwesome(input []int) (Error, String){
 ```
 
 ```puml
+
 @startuml
 
 class Diet {
@@ -35,4 +36,5 @@ Diet --o Plan
 MealPlan o-- Plan
 
 @enduml
+
 ```
