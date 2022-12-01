@@ -4,11 +4,31 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func findElfWithMostCalories(input string) int {
+	cals := calories(input)
+	sort.Ints(cals)
+
+	return cals[len(cals)-1]
+}
+
+func threeTotalElfWithMostCalories(input string) int {
+	cals := calories(input)
+	sort.Ints(cals)
+	cals = cals[len(cals)-3:]
+	sum := 0
+	for _, v := range cals {
+		sum = sum + v
+	}
+
+	return sum
+}
+
+func calories(input string) []int {
 	f, err := os.Open(input)
 	if err != nil {
 		log.Fatal(err)
@@ -17,14 +37,14 @@ func findElfWithMostCalories(input string) int {
 
 	scanner := bufio.NewScanner(f)
 
+	var cals []int
+
 	var totalC int
-	max := totalC
 	for scanner.Scan() {
-		if totalC > max {
-			max = totalC
-		}
+
 		row := strings.TrimSpace(scanner.Text())
 		if len(row) < 1 {
+			cals = append(cals, totalC)
 			totalC = 0
 			continue
 		}
@@ -33,7 +53,6 @@ func findElfWithMostCalories(input string) int {
 			log.Fatal(err)
 		}
 		totalC = totalC + c
-
 	}
-	return max
+	return cals
 }
