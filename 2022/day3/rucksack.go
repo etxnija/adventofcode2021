@@ -7,6 +7,34 @@ import (
 	"strings"
 )
 
+func SumOfBadges(input string) int {
+
+	f, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	score := 0
+	for scanner.Scan() {
+
+		firstItems := scanner.Text()
+		scanner.Scan()
+		secountItems := scanner.Text()
+		scanner.Scan()
+		thirdItems := scanner.Text()
+		potential := findPotential(firstItems, secountItems)
+
+		common := findCommon(string(potential), thirdItems)
+		p := findPrioritie(common)
+		score = score + p
+	}
+
+	return score
+
+}
+
 func SumOfpriorities(input string) int {
 
 	f, err := os.Open(input)
@@ -44,4 +72,14 @@ func findCommon(one, two string) rune {
 		}
 	}
 	return ' '
+}
+
+func findPotential(one, two string) []rune {
+	var p []rune
+	for _, v := range one {
+		if strings.ContainsRune(two, v) {
+			p = append(p, v)
+		}
+	}
+	return p
 }
