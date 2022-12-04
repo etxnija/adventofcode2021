@@ -30,16 +30,14 @@ func countContained(input string) int {
 }
 
 func oneContained(pair []string) bool {
-	section1 := strings.Split(pair[0], "-")
-	section2 := strings.Split(pair[1], "-")
-	intSection1 := toIntPair(section1)
-	intSection2 := toIntPair(section2)
-	len1 := intSection1[1] - intSection1[0]
-	len2 := intSection2[1] - intSection2[0]
+	s1 := toIntPair(strings.Split(pair[0], "-"))
+	s2 := toIntPair(strings.Split(pair[1], "-"))
+	len1 := s1[1] - s1[0]
+	len2 := s2[1] - s2[0]
 	if len1 >= len2 {
-		return intSection1[0] <= intSection2[0] && intSection1[1] >= intSection2[1]
+		return s1[0] <= s2[0] && s1[1] >= s2[1]
 	}
-	return intSection2[0] <= intSection1[0] && intSection2[1] >= intSection1[1]
+	return s2[0] <= s1[0] && s2[1] >= s1[1]
 
 }
 

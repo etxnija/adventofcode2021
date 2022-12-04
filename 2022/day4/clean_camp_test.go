@@ -25,7 +25,7 @@ func Test_countContained(t *testing.T) {
 			args: args{
 				input: "input.txt",
 			},
-			want: 2,
+			want: 556,
 		},
 	}
 	for _, tt := range tests {
