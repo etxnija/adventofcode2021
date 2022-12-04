@@ -8,6 +8,26 @@ import (
 	"strings"
 )
 
+func countOverlap(input string) int {
+	f, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	conter := 0
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		in := scanner.Text()
+		pair := strings.Split(in, ",")
+
+		if opverlap(pair) {
+			conter++
+		}
+	}
+	return conter
+}
+
 func countContained(input string) int {
 
 	f, err := os.Open(input)
@@ -27,6 +47,23 @@ func countContained(input string) int {
 		}
 	}
 	return conter
+}
+
+func opverlap(pair []string) bool {
+	if oneContained(pair) {
+		return true
+	}
+	s1 := toIntPair(strings.Split(pair[0], "-"))
+	s2 := toIntPair(strings.Split(pair[1], "-"))
+
+	if s1[1] >= s2[0] && s1[0] <= s2[0] {
+		return true
+	}
+	if s2[1] >= s1[0] && s2[1] <= s1[1] {
+		return true
+	}
+	return false
+
 }
 
 func oneContained(pair []string) bool {
