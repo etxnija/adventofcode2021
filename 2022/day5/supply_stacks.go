@@ -28,6 +28,24 @@ func rearageStacks(s, m string) string {
 	return buildString(stacks)
 }
 
+func rearageStacks9001(s, m string) string {
+	moves := loadMoves(m)
+	stacks := loadStacks(s)
+	for _, mo := range moves {
+		if mo[1] == 0 {
+			log.Println("stacks")
+		}
+		from := stacks[mo[1]-1]
+		to := stacks[mo[2]-1]
+		var c []rune
+		c, from = popStack(from, mo[0])
+		to = pushStack(c, to)
+		stacks[mo[1]-1] = from
+		stacks[mo[2]-1] = to
+	}
+	return buildString(stacks)
+}
+
 func buildString(stacks [][]rune) string {
 	str := make([]rune, len(stacks))
 	for i, s := range stacks {
@@ -40,9 +58,17 @@ func push(c rune, to []rune) []rune {
 	return append(to, c)
 }
 
+func pushStack(c, to []rune) []rune {
+	return append(to, c...)
+}
+
 func pop(from []rune) (rune, []rune) {
 	r := from[len(from)-1]
 	return r, from[:len(from)-1]
+}
+func popStack(from []rune, depth int) ([]rune, []rune) {
+	r := from[len(from)-depth:]
+	return r, from[:len(from)-depth]
 }
 
 func loadMoves(m string) [][]int {

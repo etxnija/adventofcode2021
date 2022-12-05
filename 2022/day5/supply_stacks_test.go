@@ -92,3 +92,39 @@ func Test_loadMoves(t *testing.T) {
 		})
 	}
 }
+
+func Test_rearageStacks9001(t *testing.T) {
+	type args struct {
+		s string
+		m string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "example",
+			args: args{
+				s: "example_stacks.txt",
+				m: "example_moves.txt",
+			},
+			want: "MCD",
+		},
+		{
+			name: "input",
+			args: args{
+				s: "input_stacks.txt",
+				m: "input_moves.txt",
+			},
+			want: "JHJH",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := rearageStacks9001(tt.args.s, tt.args.m); got != tt.want {
+				t.Errorf("rearageStacks9001() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
