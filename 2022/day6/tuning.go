@@ -6,17 +6,17 @@ import (
 	"os"
 )
 
-func findMarker(input string) int {
+func findMarker(input string, length int) int {
 	f, err := os.Open(input)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	return startOfPacketMarker(f)
+	return startOfPacketMarker(f, length)
 
 }
 
-func startOfPacketMarker(reader io.Reader) int {
+func startOfPacketMarker(reader io.Reader, length int) int {
 	buffer := make([]byte, 1)
 	var marker []string
 	c := 0
@@ -34,7 +34,7 @@ func startOfPacketMarker(reader io.Reader) int {
 		}
 		marker = append(marker, string(buffer))
 		c++
-		if len(marker) > 3 {
+		if len(marker) > length-1 {
 			return c
 		}
 	}
