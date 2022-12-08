@@ -9,6 +9,43 @@ import (
 	"strings"
 )
 
+func fileToRemove(input string) int {
+
+	f, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	location := []string{}
+	// root := Tree{}
+	files := collectFiles(scanner, location)
+	log.Println(files)
+	sorted := sortFiles(files)
+
+	sn := spaceNeeded(sorted)
+	need := 70000000
+	for _, v := range sorted {
+		if v > sn && v < need {
+			need = v
+		}
+	}
+
+	return need
+}
+
+func spaceNeeded(files map[string]int) int {
+	fileSystemSize := 70000000
+	neededFreeSpace := 30000000
+
+	cf := fileSystemSize - files["root"]
+	if cf > neededFreeSpace {
+		return 0
+	}
+
+	return neededFreeSpace - cf
+}
+
 func flatTree(input string) int {
 	f, err := os.Open(input)
 	if err != nil {
@@ -17,8 +54,22 @@ func flatTree(input string) int {
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	location := []string{}
-	files := make(map[string]int)
 	// root := Tree{}
+	files := collectFiles(scanner, location)
+	sorted := sortFiles(files)
+	tot := 0
+	for _, v := range sorted {
+		if v < 100000 {
+			tot = tot + v
+		}
+
+	}
+	return tot
+}
+
+func collectFiles(scanner *bufio.Scanner, location []string) map[string]int {
+	files := make(map[string]int)
+
 	for scanner.Scan() {
 		line := scanner.Text()
 		args := strings.Split(line, " ")
@@ -37,16 +88,7 @@ func flatTree(input string) int {
 		}
 
 	}
-	log.Println(files)
-	sorted := sortFiles(files)
-	tot := 0
-	for _, v := range sorted {
-		if v < 100000 {
-			tot = tot + v
-		}
-
-	}
-	return tot
+	return files
 }
 
 func sortFiles(f map[string]int) map[string]int {
