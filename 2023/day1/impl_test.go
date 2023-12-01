@@ -25,7 +25,15 @@ func Test_calibrate(t *testing.T) {
 			args: args{
 				in: "input.txt",
 			},
-			want:    56042,
+			want:    55358,
+			wantErr: false,
+		},
+		{
+			name: "example2",
+			args: args{
+				in: "example2.txt",
+			},
+			want:    281,
 			wantErr: false,
 		},
 	}

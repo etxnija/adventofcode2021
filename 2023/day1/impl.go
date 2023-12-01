@@ -47,19 +47,40 @@ func calibrationValues[T any](input string, rowFunc func(row string) (T, error))
 func processRow(row string) (int, error) {
 	sone := ""
 	stwo := ""
+	num := ""
 	for i := 0; i < len(row); i++ {
 		char := string(row[i])
 		_, err := strconv.Atoi(char)
 		if err != nil {
-			continue
+			ok := false
+			num, ok = matchNumber(row, i)
+			if !ok {
+				continue
+			}
+		} else {
+			num = string(char)
 		}
 		if sone == "" {
-			sone = string(char)
+			sone = num
 		}
-		stwo = string(char)
+
+		stwo = num
 	}
 	cal, err := strconv.Atoi(fmt.Sprintf("%s%s", sone, stwo))
+	if err != nil {
+		return 0, nil
+	}
 	return cal, err
+}
+
+func matchNumber(row string, i int) (string, bool) {
+	for _, v := range numbers {
+		s := v.String()
+		if len(row) >= i+len(s) && s == row[i:i+len(s)] {
+			return strconv.Itoa(int(v)), true
+		}
+	}
+	return "", false
 }
 
 func processRowTwo(row string) (int, error) {
