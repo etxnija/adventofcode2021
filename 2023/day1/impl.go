@@ -63,7 +63,6 @@ func processRow(row string) (int, error) {
 		if sone == "" {
 			sone = num
 		}
-
 		stwo = num
 	}
 	cal, err := strconv.Atoi(fmt.Sprintf("%s%s", sone, stwo))
