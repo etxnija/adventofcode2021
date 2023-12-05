@@ -10,50 +10,49 @@ import (
 func solve2(in string) (int, error) {
 
 	res, err := data.ReadData(in, processRow)
-	sum := 0
+
 	if err != nil {
 		return 0, err
 	}
-	res = play(res, []result{}, 0)
+	sum := play(res)
 
 	// log.Println(res)
 	return sum, nil
 }
 
-func play(res, add []result, start int) []result {
-	res = append(res, add...)
-	if len(res)-1 <= start {
-		return res
-	}
-	for i := start; i < len(res); i++ {
-		winners := scratch(res[i])
-		if len(winners) < 1 {
-			return play(res, []result{}, i+1)
+func play(res []result) int {
+	// res = append(res, add...)
+	// if len(res)-1 <= start {
+	// 	return res
+	// }
+	for i := 0; i < len(res); i++ {
+		winners := res[i].winCount()
+		if winners > len(res)-i {
+			winners = len(res) - i
 		}
-		next := i + 1 + len(winners)
-		if next > len(res) {
-			next = len(res) - 1
-		}
-		if next > i {
-			play(res, res[i+1:next], i+1)
-		} else {
-			play(res, []result{}, i+1)
+		for j := 1; j < winners+1; j++ {
+			res[j+i].count = res[j+i].count + res[i].count
 		}
 	}
-	return []result{}
+	sum := 0
+	for _, r := range res {
+		sum = sum + r.count
+
+	}
+	return sum
 }
 
-func scratch(r result) []int {
-	var winners []int
-	for _, m := range r.my {
-		for _, w := range r.winning {
-			if w == m {
-				winners = append(winners, m)
-			}
-		}
-	}
-	return winners
-}
+// func scratch(r result) []int {
+// 	var winners []int
+// 	for _, m := range r.my {
+// 		for _, w := range r.winning {
+// 			if w == m {
+// 				winners = append(winners, m)
+// 			}
+// 		}
+// 	}
+// 	return winners
+// }
 
 func solve(in string) (int, error) {
 
@@ -89,7 +88,7 @@ func processRow(row string) (result, error) {
 	winInt := toIntArray(winingNumbers)
 	myInt := toIntArray(myNumbers)
 
-	return result{winning: winInt, my: myInt}, nil
+	return result{winning: winInt, my: myInt, count: 1}, nil
 }
 
 func toIntArray(s string) []int {

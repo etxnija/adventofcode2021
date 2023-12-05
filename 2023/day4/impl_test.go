@@ -97,17 +97,17 @@ func Test_solve2(t *testing.T) {
 			args: args{
 				in: "example.txt",
 			},
-			want:    13,
+			want:    30,
 			wantErr: false,
 		},
-		// {
-		// 	name: "input",
-		// 	args: args{
-		// 		in: "input.txt",
-		// 	},
-		// 	want:    26346,
-		// 	wantErr: false,
-		// },
+		{
+			name: "input",
+			args: args{
+				in: "input.txt",
+			},
+			want:    26346,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
