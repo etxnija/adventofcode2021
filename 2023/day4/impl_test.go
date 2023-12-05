@@ -81,3 +81,44 @@ func Test_solve(t *testing.T) {
 		})
 	}
 }
+
+func Test_solve2(t *testing.T) {
+	type args struct {
+		in string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr bool
+	}{
+		{
+			name: "example",
+			args: args{
+				in: "example.txt",
+			},
+			want:    13,
+			wantErr: false,
+		},
+		// {
+		// 	name: "input",
+		// 	args: args{
+		// 		in: "input.txt",
+		// 	},
+		// 	want:    26346,
+		// 	wantErr: false,
+		// },
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := solve2(tt.args.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("solve2() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("solve2() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
