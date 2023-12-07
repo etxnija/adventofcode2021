@@ -8,6 +8,41 @@ import (
 	"strings"
 )
 
+func solveRange(in string) (int, error) {
+
+	res, err := data.ReadFile(in, processRow)
+	if err != nil {
+		return 0, err
+	}
+	// log.Println(res)
+
+	var start []int
+	for i, r := range res {
+		if len(r.Seeds) > 0 {
+			start = r.Seeds
+			if i == 0 {
+				res = res[1:]
+			} else {
+				res = append(res[:i-1], res[i+1:]...)
+			}
+			break
+		}
+	}
+
+	min := math.MaxInt
+
+	for i := 0; i < len(start); i = i + 2 {
+		for j := start[i]; j < (start[i] + start[i+1]); j++ {
+			converter := convert(res, "seed", j)
+			if converter < min {
+				min = converter
+			}
+		}
+	}
+
+	return min, nil
+}
+
 func solve(in string) (int, error) {
 
 	res, err := data.ReadFile(in, processRow)

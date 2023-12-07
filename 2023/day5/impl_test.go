@@ -27,7 +27,7 @@ func Test_solve(t *testing.T) {
 			args: args{
 				in: "input.txt",
 			},
-			want:    35,
+			want:    26273516,
 			wantErr: false,
 		},
 	}
@@ -177,6 +177,47 @@ func Test_result_convertToDest(t *testing.T) {
 			}
 			if got := r.convertToDest(tt.args.source); got != tt.want {
 				t.Errorf("result.convertToDest() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_solveRange(t *testing.T) {
+	type args struct {
+		in string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr bool
+	}{
+		{
+			name: "example",
+			args: args{
+				in: "example.txt",
+			},
+			want:    46,
+			wantErr: false,
+		},
+		{
+			name: "input",
+			args: args{
+				in: "input.txt",
+			},
+			want:    34039469,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := solveRange(tt.args.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("solveRange() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("solveRange() = %v, want %v", got, tt.want)
 			}
 		})
 	}
