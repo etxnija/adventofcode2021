@@ -22,6 +22,14 @@ func Test_solve(t *testing.T) {
 			want:    35,
 			wantErr: false,
 		},
+		{
+			name: "input",
+			args: args{
+				in: "input.txt",
+			},
+			want:    35,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

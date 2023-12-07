@@ -2,7 +2,6 @@ package day5
 
 import (
 	"bufio"
-	"log"
 	"math"
 	"nils/adventofcode2021/2023/data"
 	"strconv"
@@ -15,7 +14,7 @@ func solve(in string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	log.Println(res)
+	// log.Println(res)
 
 	var start []int
 	for i, r := range res {
