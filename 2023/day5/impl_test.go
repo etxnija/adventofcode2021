@@ -39,7 +39,7 @@ func Test_solve(t *testing.T) {
 
 func Test_result_convertToDest(t *testing.T) {
 	type fields struct {
-		seeds  []int
+		Seeds  []int
 		From   string
 		To     string
 		ranges []ranges
@@ -162,7 +162,7 @@ func Test_result_convertToDest(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := result{
-				seeds:  tt.fields.seeds,
+				Seeds:  tt.fields.Seeds,
 				From:   tt.fields.From,
 				To:     tt.fields.To,
 				ranges: tt.fields.ranges,

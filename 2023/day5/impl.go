@@ -3,6 +3,7 @@ package day5
 import (
 	"bufio"
 	"log"
+	"math"
 	"nils/adventofcode2021/2023/data"
 	"strconv"
 	"strings"
@@ -15,7 +16,58 @@ func solve(in string) (int, error) {
 		return 0, err
 	}
 	log.Println(res)
-	return 0, nil
+
+	var start []int
+	for i, r := range res {
+		if len(r.Seeds) > 0 {
+			start = r.Seeds
+			if i == 0 {
+				res = res[1:]
+			} else {
+				res = append(res[:i-1], res[i+1:]...)
+			}
+			break
+		}
+	}
+
+	min := math.MaxInt
+	for _, s := range start {
+		converter := convert(res, "seed", s)
+		if converter < min {
+			min = converter
+		}
+	}
+
+	return min, nil
+}
+
+// assume order
+func convert(res []result, sourceName string, source int) int {
+
+	ls := source
+	sn := sourceName
+	for {
+		s, ok := getNext(res, sn)
+		if !ok {
+			return ls
+		}
+		ls = s.convertToDest(ls)
+		sn = s.To
+	}
+
+}
+
+func getNext(res []result, sourceName string) (result, bool) {
+	ok := false
+	var firstSource result
+	for _, r := range res {
+		if sourceName == r.From {
+			firstSource = r
+			ok = true
+			break
+		}
+	}
+	return firstSource, ok
 }
 
 func processRow(scanner bufio.Scanner) ([]result, error) {
@@ -48,11 +100,12 @@ func processRow(scanner bufio.Scanner) ([]result, error) {
 			}
 		}
 		if strings.Contains(row, "seeds:") {
+
 			ss := strings.Split(row, ":")
-			sa := strings.Split(ss[1], " ")
+			sa := strings.Split(strings.TrimSpace(ss[1]), " ")
 			for _, seed := range sa {
 				s, _ := strconv.Atoi(seed)
-				r.seeds = append(r.seeds, s)
+				r.Seeds = append(r.Seeds, s)
 			}
 			res = append(res, r)
 
@@ -66,7 +119,7 @@ func processRow(scanner bufio.Scanner) ([]result, error) {
 }
 
 type result struct {
-	seeds  []int
+	Seeds  []int
 	From   string
 	To     string
 	ranges []ranges
