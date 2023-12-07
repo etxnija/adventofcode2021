@@ -28,3 +28,16 @@ func ReadData[T any](input string, rowFunc func(row string) (T, error)) ([]T, er
 	}
 	return cals, nil
 }
+
+func ReadFile[T any](input string, fileFunc func(scanner bufio.Scanner) ([]T, error)) ([]T, error) {
+	f, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+
+	return fileFunc(*scanner)
+
+}
