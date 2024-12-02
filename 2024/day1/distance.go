@@ -13,6 +13,17 @@ import (
 func distance(file string) int {
 	slog.Info("file ", slog.String("file ", file))
 
+	list1, list2 := getSorted(file)
+	sum := 0
+
+	for i := range list1 {
+		sum = sum + Abs(list1[i]-list2[i])
+	}
+
+	return sum
+}
+
+func getSorted(file string) ([]int, []int) {
 	res, err := data.ReadData(file, processRow)
 	if err != nil {
 		slog.Error("Unable to read data", slog.Any("err", err))
@@ -28,12 +39,30 @@ func distance(file string) int {
 	}
 	sort.Ints(list1)
 	sort.Ints(list2)
+	return list1, list2
+}
+
+func distance2(file string) int {
+	slog.Info("file", slog.String("file", file))
+	list1, list2 := getSorted(file)
 	sum := 0
-
-	for i := range list1 {
-		sum = sum + Abs(list1[i]-list2[i])
+	i2 := 0
+	for i, v := range list1 {
+		times := 0
+		for list1[i] > list2[i2] {
+			i2++
+		}
+		for list1[i] == list2[i2] {
+			i2++
+			times++
+		}
+		// lookahead
+		tt := 1
+		for j := 1; len(list2) > j+i && list1[j+i] == v; j++ {
+			tt++
+		}
+		sum = sum + v*times*tt
 	}
-
 	return sum
 }
 
