@@ -25,6 +25,33 @@ func safeReports(file string) int {
 	return sum
 }
 
+func safeReports2(file string) int {
+	slog.Info("file", slog.Any("file", file))
+	res, err := data.ReadData(file, processRow2)
+	if err != nil {
+		slog.Error("Error reading data", slog.Any("err", err))
+	}
+
+	sum := 0
+	for _, v := range res {
+		if v {
+			sum++
+		}
+	}
+
+	return sum
+}
+
+func processRow2(row string) (bool, error) {
+	vals := strings.Fields(row)
+	valInt := make([]int, len(vals))
+	for i, v := range vals {
+		vi, _ := strconv.Atoi(v)
+		valInt[i] = vi
+	}
+	return allSameDirectionAndAdjacentWithDamper(valInt), nil
+}
+
 func processRow(row string) (bool, error) {
 	// slog.Info("row", slog.Any("vals", row))
 	vals := strings.Fields(row)
@@ -34,7 +61,7 @@ func processRow(row string) (bool, error) {
 		valInt[i] = vi
 	}
 
-	return (allSameDirection(valInt) && withinAdjacent(valInt)), nil
+	return allSameDirectionAndAdjacent(valInt), nil
 }
 
 func Abs(x int) int {
@@ -45,19 +72,84 @@ func Abs(x int) int {
 }
 
 func allSameDirection(values []int) bool {
-	plus := 0
-	minus := 0
+	direction := 0
+	fails := 0
 	for i := 0; i < len(values)-1; i++ {
-		diff := (values[i+1] - values[i])
-		if diff < 0 {
-			minus++
-		}
-		if diff > 0 {
-			plus++
+		switch diff := (values[i+1] - values[i]); {
+		case diff < 0:
+			if direction == 0 {
+				direction = -1
+				continue
+			}
+			if direction == 1 {
+				fails++
+			}
+		case diff > 0:
+			if direction == 0 {
+				direction = 1
+				continue
+			}
+			if direction == -1 {
+				fails++
+			}
+		default:
+			continue
 		}
 	}
 
-	return !(plus > 0 && minus > 0)
+	return fails < 1
+}
+
+func allSameDirectionAndAdjacentWithDamper(values []int) bool {
+	if allSameDirectionAndAdjacent(values) {
+		return true
+	}
+	for i := 0; i < len(values); i++ {
+		tempVals := RemoveIndex(values, i)
+		if allSameDirectionAndAdjacent(tempVals) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func RemoveIndex(s []int, i int) []int {
+	ns := make([]int, len(s))
+	copy(ns, s)
+	return append(ns[:i], ns[i+1:]...)
+}
+
+func allSameDirectionAndAdjacent(values []int) bool {
+	direction := 0
+	fails := 0
+	for i := 0; i < len(values)-1; i++ {
+		diff := (values[i+1] - values[i])
+		switch {
+		case diff < 0:
+			if direction == 0 {
+				direction = -1
+			}
+			if direction == 1 {
+				fails++
+			}
+		case diff > 0:
+			if direction == 0 {
+				direction = 1
+			}
+			if direction == -1 {
+				fails++
+			}
+		case diff == 0:
+			fails++
+		}
+		diffAbs := Abs(diff)
+		if diffAbs < 1 || diffAbs > 3 {
+			fails++
+		}
+	}
+
+	return fails < 1
 }
 
 func withinAdjacent(values []int) bool {
