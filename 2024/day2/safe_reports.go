@@ -2,6 +2,7 @@ package day2
 
 import (
 	"log/slog"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -115,8 +116,7 @@ func allSameDirectionAndAdjacentWithDamper(values []int) bool {
 }
 
 func RemoveIndex(s []int, i int) []int {
-	ns := make([]int, len(s))
-	copy(ns, s)
+	ns := slices.Clone(s)
 	return append(ns[:i], ns[i+1:]...)
 }
 
