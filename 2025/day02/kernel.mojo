@@ -38,39 +38,66 @@ fn find_invalid(data: List[String]) raises -> Int:
             end = Int64(r[1])
             range_of_ids = range(start, end + 1)
             for i in range_of_ids:
-                l = length_of_int(i)
-                if l % 2 == 0:
-                    splitter = int_pow(l / 2)
-                    # print("pow: ", splitter)
-                    var s: Int64 = i / splitter
-                    var e: Int64 = i % splitter
-                    a = s & e
-                    # print(
-                    #     "num ",
-                    #     i,
-                    #     "has length ",
-                    #     l,
-                    #     " start:",
-                    #     s,
-                    #     " end:",
-                    #     e,
-                    #     " and: a",
-                    # )
-                    if s == e:
-                        # print("----- this ----: ", i)
-                        total_crossings += i
+                if repeted2(i):
+                    total_crossings += i
 
     return total_crossings.__int__()
 
 
-fn int_pow(exponent: Int64) -> Int64:
+fn repeted2(i: Int64) -> Bool:
+    l = length_of_int(i)
+    var fac = List[Int64]()
+    factors(l, fac)
+    for j in fac:
+        var temp = i
+        num_chunks = length_of_int(i) / j
+        var split = List[Int64]()
+        # Chunking form the end
+        for _ in range(num_chunks):
+            splitter = int_pow(j)
+            var chunk: Int64 = temp % splitter
+            split.append(chunk)
+            temp /= splitter
+
+        if split.count(split[0]) == len(split):
+            return True
+
+    return False
+
+
+fn factors(x: Int64, mut result: List[Int64]):
+    for i in range(1, x):
+        if x % i == 0:
+            result.append(i)
+
+
+fn repeted1(i: Int64) -> Bool:
+    l = length_of_int(i)
+    if l % 2 == 0:
+        splitter = int_pow(l / 2)
+        # print("pow: ", splitter)
+        var s: Int64 = i / splitter
+        var e: Int64 = i % splitter
+        a = s & e
+        if s == e:
+            return True
+
+    return False
+
+
+fn int_pow(exp: Int64) -> Int64:
+    if exp < 0:
+        return 0
+    if exp == 0:
+        return 1
+
     var result: Int64 = 1
-    for _ in range(exponent):
+    for _ in range(exp):
         result *= 10
     return result
 
 
-fn length_of_int(i: Int64) raises -> Int64:
+fn length_of_int(i: Int64) -> Int64:
     length = 0
     if i == 0:
         length = 1
