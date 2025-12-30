@@ -1,6 +1,6 @@
 from python import PythonObject
 from python.bindings import PythonModuleBuilder
-from os import abort
+from os import abort, Atomic
 from algorithm import parallelize
 from int_help.int_manipulation import int_pow, length_of_int, int_at
 
@@ -23,22 +23,30 @@ fn joltage_py(py_obj: PythonObject) raises -> PythonObject:
 
 
 fn joltage(data: List[String]) raises -> Int:
-    var total: Int = 0
+    var total = Atomic[DType.int64](0)
     for line in data:
-        # var i: Int128 = Int128(line)
         total += bank_joltage(line)
 
-    return total
+    @parameter
+    fn worker(i: Int):
+        try:
+            line = data[i]
+            result = bank_joltage(line)
+            total.fetch_add(Int64(result))
+        except:
+            pass
+
+    return Int(total.load())
 
 
 fn bank_joltage(s: String) raises -> Int:
     l = len(s)
     var p: Int = 0
     for loc in range(l - 1):
-        num = Int(s[loc])
+        num = ord(s[loc]) - ord("0")
         # print("num: ", num, " at loc: ", loc, "l: ", l)
         for sub_loc in range(loc + 1, l):
-            sub_num = Int(s[sub_loc])
+            sub_num = ord(s[sub_loc]) - ord("0")
             var tp: Int = 10 * num + sub_num
             # print(
             #     "tp: ",
