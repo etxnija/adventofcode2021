@@ -20,12 +20,12 @@ TEST_CASES: List[TestCase] = [
     TestCase(
         name="example",
         file="example.txt",
-        expected=13
+        expected=43
     ),
     TestCase(
         name="input",
         file="input.txt",
-        expected=1435
+        expected=8623
     )
 ]
 # kernel.calculate_distance_py()
