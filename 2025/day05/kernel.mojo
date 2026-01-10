@@ -56,6 +56,8 @@ fn available(data: List[String]) raises -> Int:
     merge_ranges(ranges)
     print("Ranges after: ", len(ranges))
 
+    for r in ranges:
+        total += r.count()
     # index = List[Bool](length=length, fill=False)
     # for r in ranges:
     #     mi = r[0] - min
@@ -63,14 +65,14 @@ fn available(data: List[String]) raises -> Int:
     #     for idx in range(mi, mx):
     #         index[idx] = True
 
-    while iter.__has_next__():
-        line = iter.__next__()
-        # print("number", line)
-        num = atol(line)
-        for r in ranges:
-            if r.inRanage(num):
-                total += 1
-                break
+    # while iter.__has_next__():
+    #     line = iter.__next__()
+    #     # print("number", line)
+    #     num = atol(line)
+    #     for r in ranges:
+    #         if r.inRanage(num):
+    #             total += 1
+    #             break
 
     return total
 
@@ -94,6 +96,9 @@ struct Range(Comparable, Copyable, Movable, Representable, Stringable):
 
     fn inRanage(self, i: Int) -> Bool:
         return i >= self.start and i <= self.end
+
+    fn count(self) -> Int:
+        return self.end - self.start + 1
 
 
 fn merge_ranges(mut ranges: List[Range]):
