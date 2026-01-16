@@ -20,12 +20,12 @@ TEST_CASES: List[TestCase] = [
     TestCase(
         name="example",
         file="example.txt",
-        expected=4277556
+        expected=3263827
     ),
     TestCase(
         name="input",
         file="input.txt",
-        expected=5733696195703
+        expected=10951882745757
     )
 ]
 # kernel.calculate_distance_py()
@@ -37,7 +37,7 @@ def create_test_method(case: TestCase):
 
     def test_method(self):
         print("Creating test:", case.name)
-        input_data = read_input(case.file, True)
+        input_data = read_input(case.file, True, True)
         if not input_data:
             self.skipTest(f"Skipping test '{case.name}': Input data not found")
 

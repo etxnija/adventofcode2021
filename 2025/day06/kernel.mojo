@@ -29,35 +29,36 @@ fn grand_total(data: List[String]) raises -> Int:
     # Will make a flat list and then start from the bottom of each colum
     #
     # 1. Flatten
-    fdata = List[String]()
-    num_lines = 0
-    for line in data:
-        num_lines += 1
-        num = line.split(" ")
-        for n in num:
-            if not n == "":
-                fdata.append(String(n))
-    # Check
-    length = len(fdata)
-    if not length % num_lines == 0:
-        return 0
-    var num_col: Int = length // num_lines
+    # fdata = ""
+    num_lines = len(data)
+    # Assume index 0 on last row has the first operator
+    start_idx = 0
+    end_idx = 0
+    operator_row = data[num_lines - 1]
+    len_oper_row = len(operator_row)
+    for i in range(0, len_oper_row):
+        operator = operator_row[i]
+        if operator == "*" or operator == "+" or i == len_oper_row - 1:
+            end_idx = i + 1 if len_oper_row - 1 == i else i - 1
+            problem_total = 0
+            var oper = plus
+            if operator_row[start_idx] == "*":
+                #     problem_total = 1
+                oper = multi
+            for idx in range(start_idx, end_idx):
+                sig = 1
+                num = 0
+                for row in range(num_lines - 2, -1, -1):
+                    # Start from the bottom since the lease significat digit is at the bottom
+                    # ranage from second from bottom to 0 with steps of -1
+                    d = data[row][idx]  # get the digit on row and index
+                    if d.is_ascii_digit():
+                        num += sig * atol(d)
+                        sig *= 10
 
-    for c in range(num_col):
-        # Decide operator
-        var oper: fn (Int, Int) -> Int
-        problem_total = 0
-        if fdata[num_col * (num_lines - 1) + c] == "*":
-            oper = multi
-            problem_total = 1
-        else:
-            oper = plus
-
-        for r in range(num_lines - 1):
-            snum = fdata[num_col * r + c]
-            n = atol(snum)
-            problem_total = oper(problem_total, n)
-        total += problem_total
+                problem_total = oper(problem_total, num)
+            start_idx = i
+            total += problem_total
 
     return total
 
@@ -67,4 +68,28 @@ fn plus(a: Int, b: Int) -> Int:
 
 
 fn multi(a: Int, b: Int) -> Int:
+    if a == 0:
+        return b
     return a * b
+
+
+struct Problem:
+    var oper: fn (Int, Int) -> Int
+    var inputs: List[String]
+    var start: Int
+
+    fn __init__(out self, oper: fn (Int, Int) -> Int, start: Int):
+        self.oper = oper
+        self.inputs = List[String]()
+        self.start = start
+
+    fn add_input(mut self, input: String):
+        self.inputs.append(input)
+
+    fn total(self) raises -> Int:
+        total = self.start
+        for input in self.inputs:
+            n = atol(input)
+            total += self.oper(total, n)
+
+        return total
