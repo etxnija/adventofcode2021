@@ -38,13 +38,15 @@ fn splits(data: List[String]) raises -> Int:
     # print(start_col)
     # print(fdata)
 
-    cache = Set[Int]()
+    cache = Dict[Int, Int]()
     total = count_nodes(fdata, start_col, length, cache)
     # print(cache.__str__())
-    return len(cache)
+    return total + 1
 
 
-fn count_nodes(s: String, idx: Int, rl: Int, mut cache: Set[Int]) raises -> Int:
+fn count_nodes(
+    s: String, idx: Int, rl: Int, mut cache: Dict[Int, Int]
+) raises -> Int:
     i = idx
 
     target = ord("^")
@@ -54,15 +56,13 @@ fn count_nodes(s: String, idx: Int, rl: Int, mut cache: Set[Int]) raises -> Int:
         if i >= len(s):
             return 0
 
-    if cache.__contains__(i):
-        return 0
-    # Add to cache once found
-    # print("Adding ", i, " char: ", s[i])
-    cache.add(i)
+    if i in cache:
+        return cache[i]
 
     # Now split.
-    children = List[Int](i - 1, i + 1)
+    # left and right
     count = 1
-    for child in children:
-        count += count_nodes(s, child, rl, cache)
+    count += count_nodes(s, i - 1, rl, cache)
+    count += count_nodes(s, i + 1, rl, cache)
+    cache[i] = count
     return count
